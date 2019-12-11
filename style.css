@@ -1,4 +1,4 @@
-body {
+div {
     background-image: url(./images/snow.jpg);
     background-size: 100%;
     background-repeat: no-repeat;
@@ -18,7 +18,7 @@ body {
     /* margin-bottom: -300px; */
 /* } */
 
-.canvas {
+/* .canvas { */
     /* clear: both; */
     /* height: 600px; */
     /* width: 80vw; */

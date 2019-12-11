@@ -32,11 +32,10 @@ class Heroes {
     }
     
     updateBela() {
-        // console.log(belaImg.src)
         
         belaImg.src = './images/Bela.png';
         ctx.drawImage(belaImg,this.x, this.y,this.width,this.height)
-       
+    
       }
     
     newPos() {
@@ -89,16 +88,32 @@ let bela = new Heroes(100,100,'yellow',40,canvas.height*0.80)
 document.onkeydown = function(e) {
     switch (e.keyCode) {
       case 38: // up arrow
-        bela.speedY -= 4;
+      if (bela.y > 400) {
+        bela.speedY -= 2
+      }else {
+        bela.speedY = 0;
+      }
         break;
       case 40: // down arrow
-        bela.speedY += 4;
+      if (bela.y + bela.height < canvas.height) {
+      bela.speedY += 2;
+      } else {
+      bela.speedY = 0;
+      }
         break;
       case 37: // left arrow
-        bela.speedX -= 4;
+      if (bela.x > 0) {
+        bela.speedX -= 2;
+      } else {
+        bela.speedX = 0;
+      }
         break;
       case 39: // right arrow
-        bela.speedX += 4;
+      if (bela.x + bela.width < canvas.width){
+        bela.speedX += 2;
+      } else {
+        bela.speedX = 0;
+      }
         break;
     }
   };
@@ -154,28 +169,18 @@ document.onkeydown = function(e) {
     let villainsArry = []
     
     
-    // let coyote1 = new Villains(canvas.width,canvas.height*0.8,100,50,3)
-    // let coyote2 = new Villains(canvas.width,canvas.height*0.75,100,50,5)
-    // let coyote3 = new Villains(canvas.width,canvas.height*0.9,100,50,7)
-    // let coyote4 = new Villains(canvas.width,canvas.height*0.8,100,50,4)
-    // let coyote5 = new Villains(canvas.width,canvas.height*0.85,100,50,2)
- 
-    
-    // villainsArry.push(coyote1,coyote2,coyote3,coyote4,coyote5)
     
     let frames = 0;
     
     const coyoteRun = () => {
-      if (frames % 120 === 0) {
+      if (frames % 150 === 0) {
         villainsArry.push(new Villains(canvas.width,canvas.height*(Math.random()*(0.9 - 0.75) + 0.75),100,50,7))
       }
 
 
     villainsArry.forEach(function(e,idx) {
         e.x -= e.speed
-  //       // if (ctx.frames % 200 === 0) {
-        
-  //   // }
+
     return e.updateCoyote()
   })
 }
@@ -184,6 +189,7 @@ document.onkeydown = function(e) {
 let cupImg = new Image();
 let teaPotImg = new Image();
 let fireImg = new Image();
+let clockImg = new Image();
 
 class Object  {
   constructor(x,y,width,height) {
@@ -214,7 +220,7 @@ class Object  {
 }
 
   updateTeapot() {
-    teaPotImg.src = './images/teaPot.jpg';
+    teaPotImg.src = './images/teaPot.png';
     ctx.drawImage(teaPotImg,this.x,this.y,this.width,this.height)
   }
 
@@ -223,16 +229,20 @@ class Object  {
     ctx.drawImage(fireImg,this.x,this.y,this.width,this.height)
   }
 
+  updateClock() {
+    clockImg.src = './images/clock.png';
+    ctx.drawImage(clockImg,this.x,this.y,this.width,this.height)
+  }
 }
 
-let cup = new Object(300,canvas.height*0.8,40,40)
-let teaPot = new Object(600,canvas.height*0.9,60,60)
-let fire = new Object(900, canvas.height*0.7,70,70)
-
+let cup = new Object(300,canvas.height*(Math.random()*(0.9 - 0.75) + 0.75),40,40)
+let teaPot = new Object(600,canvas.height*(Math.random()*(0.9 - 0.75) + 0.75),60,60)
+let fire = new Object(900, canvas.height*(Math.random()*(0.9 - 0.75) + 0.75),70,70)
+let clock = new Object(1200, canvas.height*(Math.random()*(0.9 - 0.75) + 0.75),80,80)
 
 let objectsArr = []
 
-objectsArr.push(cup,teaPot,fire)
+objectsArr.push(cup,teaPot,fire,clock)
 
 let objectsCollected = []
 
@@ -243,6 +253,13 @@ function checkGameOver() {
   
   if (crashed) {
     window.cancelAnimationFrame(requestId)
+    //tela preta
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
+    // texto
+    ctx.font = "100px serif";
+    ctx.fillStyle = "red";
+    ctx.fillText("Game Over!", 450, 350);
   }
 }
 
@@ -258,18 +275,31 @@ function collectObjects() {
 
 
 function checkWin() {
-  if (bela.x > 970 && bela.y < 200) {
-      console.log('win')
+  if (bela.x > 1000 && bela.y < 400 && objectsCollected.length === 4) {
+    window.cancelAnimationFrame(requestId)
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
+    // texto
+    ctx.font = "50px serif";
+    ctx.fillStyle = "green";
+    ctx.fillText('The Beast is saved!', 500, 350);  
+   
 }
 }
+
+let button = document.createElement('BUTTON')
+document.body.appendChild(button)
+button.innerHTML = 'Start'
+
 
 
 const upDateGameArea = () => {
     clear()
-    // upDateCastle()
+    
     fire.upDateFire()
     teaPot.updateTeapot()
     cup.upDateCup()
+    clock.updateClock()
     bela.newPos()
     bela.updateBela()
     coyoteRun()
@@ -288,8 +318,6 @@ let requestId = requestAnimationFrame(upDateGameArea)
 
 
     
-    //fazer os coiotes atravessem aleatoriamente de um lado para o outro 
-    //definir bordas do canvas
     //desenhar as petalas e definir a localizacao
     //fazer as petalas cairem em determinado tempo
     //definir gameover com a queda da ultima petala
