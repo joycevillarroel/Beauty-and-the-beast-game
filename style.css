@@ -1,0 +1,26 @@
+body {
+    background-image: url(./images/snow.jpg);
+    background-size: 100%;
+    background-repeat: no-repeat;
+    /* display: flex;
+    flex-direction: row-reverse; */
+    /* align-items: flex-end; */
+    
+}
+
+
+
+/* .castle { */
+    /* float: right; */
+    /* width: 20vw;
+    margin-top: 150px;
+    margin-right: -100px; */
+    /* margin-bottom: -300px; */
+/* } */
+
+.canvas {
+    /* clear: both; */
+    /* height: 600px; */
+    /* width: 80vw; */
+    /* margin-top: -3000px ; */
+}
