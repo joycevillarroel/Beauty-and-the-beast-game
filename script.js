@@ -15,7 +15,26 @@ const clear = () => {
 const stop = () => {
     window.cancelAnimationFrame(requestId)
   }
+  
+  let startBackgroundImg = new Image();
 
+const start = () => {
+  startBackgroundImg.src = 'images/background.jpg'
+  startBackgroundImg.onload = () => {
+  ctx.drawImage(startBackgroundImg,0,0,canvas.width,canvas.height)}
+  
+}
+
+let winImg = new Image();
+let gameOverImg = new Image();
+
+let audioElement = new Audio();
+audioElement.src = './audio/2-08-The-Beast.mp3';
+window.onload = () => {
+  audioElement.autoplay = true;
+  audioElement.play()
+}
+  console.log(audioElement);
 
 
 let belaImg = new Image();
@@ -114,7 +133,29 @@ document.onkeydown = function(e) {
       } else {
         bela.speedX = 0;
       }
-        break;
+      break;
+      case 32: //start
+      if (frames === 0) {
+        upDateGameArea();
+
+      }
+
+      if (restart) {
+        restart = false
+        // villainsArry.pop()
+        villainsArry.splice(0,villainsArry.length)
+        frames = 0;
+        bela.x = 0;
+        objectsCollected.splice(0,objectsCollected.length)
+        objectsArr.forEach(function(item) {
+          let newY = canvas.height*(Math.random()*(0.9 - 0.75) + 0.75)
+          item.y = newY
+        } ) 
+        console.log(objectsArr.length)
+        upDateGameArea();
+      }
+      break;
+      
     }
   };
 
@@ -173,7 +214,7 @@ document.onkeydown = function(e) {
     let frames = 0;
     
     const coyoteRun = () => {
-      if (frames % 150 === 0) {
+      if (frames % 250 === 0) {
         villainsArry.push(new Villains(canvas.width,canvas.height*(Math.random()*(0.9 - 0.75) + 0.75),100,50,7))
       }
 
@@ -245,6 +286,7 @@ let objectsArr = []
 objectsArr.push(cup,teaPot,fire,clock)
 
 let objectsCollected = []
+let restart = false
 
 function checkGameOver() {
   let crashed = villainsArry.some(function(obstacle) {
@@ -252,21 +294,37 @@ function checkGameOver() {
   });
   
   if (crashed) {
+    restart = true
     window.cancelAnimationFrame(requestId)
+
+    gameOverImg.src = './images/gameOver.png'
+    gameOverImg.onload = () => {
+      
+    ctx.drawImage(gameOverImg,350,100,760,311)
+    }
+
     //tela preta
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
     ctx.fillRect(0, 0, canvas.width, canvas.height)
     // texto
-    ctx.font = "100px serif";
-    ctx.fillStyle = "red";
-    ctx.fillText("Game Over!", 450, 350);
+    ctx.font = "70px serif";
+    ctx.fillStyle = "rgb(181,195,189)";
+    ctx.fillText("Game Over!", 550, 490);
+
+    ctx.font = "40px serif";
+    ctx.fillStyle = "rgb(166,147,141)"
+    ctx.fillText("Try again", 660, 550);
+
+    ctx.font = "20px serif";
+    ctx.fillStyle = "rrgb(166,147,141)";
+    ctx.fillText("Press space", 695, 580);
   }
 }
 
 function collectObjects() {
   let collectAll = objectsArr.forEach(e => {
     if (bela.collect(e)) { 
-      e.x = 10000
+      e.y = 10000
       objectsCollected.push(e)
     
     }
@@ -274,28 +332,36 @@ function collectObjects() {
 }
 
 
+
 function checkWin() {
   if (bela.x > 1000 && bela.y < 400 && objectsCollected.length === 4) {
     window.cancelAnimationFrame(requestId)
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+    restart = true
+    winImg.src = './images/win.jpg'
+    winImg.onload = () => {
+      
+    ctx.drawImage(winImg,400,100,640,360)
+  }
+    ctx.fillStyle = 'rgb(234,154,1, 0.5)';
     ctx.fillRect(0, 0, canvas.width, canvas.height)
     // texto
     ctx.font = "50px serif";
-    ctx.fillStyle = "green";
-    ctx.fillText('The Beast is saved!', 500, 350);  
-   
-}
+    ctx.fillStyle = "rgb(48,93,136)";
+    ctx.fillText('All are saved!', 580, 530);
+    
+    ctx.font = "25px serif";
+    ctx.fillStyle = "rgb(48,93,136)";
+    ctx.fillText('Press space for play again', 590, 570);
+    
+  }
 }
 
-let button = document.createElement('BUTTON')
-document.body.appendChild(button)
-button.innerHTML = 'Start'
 
 
 
 const upDateGameArea = () => {
     clear()
-    
+    audioElement.play()
     fire.upDateFire()
     teaPot.updateTeapot()
     cup.upDateCup()
@@ -311,8 +377,9 @@ const upDateGameArea = () => {
 
 }
 
+start()
 
-let requestId = requestAnimationFrame(upDateGameArea)
+// let requestId = requestAnimationFrame(upDateGameArea)
 
 
 
