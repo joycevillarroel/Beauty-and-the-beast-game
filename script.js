@@ -29,7 +29,7 @@ let winImg = new Image();
 let gameOverImg = new Image();
 
 let audioElement = new Audio();
-audioElement.src = './audio/2-08-The-Beast.mp3';
+audioElement.src = './audio/2-16 Wolves Attack Belle.m4a';
 window.onload = () => {
   audioElement.autoplay = true;
   audioElement.play()
@@ -214,7 +214,7 @@ document.onkeydown = function(e) {
     let frames = 0;
     
     const coyoteRun = () => {
-      if (frames % 250 === 0) {
+      if (frames % 200 === 0) {
         villainsArry.push(new Villains(canvas.width,canvas.height*(Math.random()*(0.9 - 0.75) + 0.75),100,50,7))
       }
 
